@@ -4,19 +4,28 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
 
+// Components
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+
+// Pages
+import Home from '@/pages/Home';
+import Recipes from '@/pages/Recipes';
+import RecipeDetail from '@/pages/RecipeDetail';
+import About from '@/pages/About';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
+
 const queryClient = new QueryClient();
 
-function Home() {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Replit Agent is building...
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          Your app will appear here once it's ready.
-        </p>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
     </div>
   );
 }
@@ -25,6 +34,11 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/recipes" component={Recipes} />
+      <Route path="/recipe/:slug" component={RecipeDetail} />
+      <Route path="/about" component={About} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -35,7 +49,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
+          <Layout>
+            <Router />
+          </Layout>
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

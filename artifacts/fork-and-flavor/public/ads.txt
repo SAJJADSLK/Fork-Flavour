@@ -1,0 +1,2 @@
+# Add your AdSense publisher line here once you have an AdSense account, e.g.:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

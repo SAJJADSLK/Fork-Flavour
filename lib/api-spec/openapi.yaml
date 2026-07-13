@@ -127,15 +127,12 @@ paths:
     get:
       operationId: getRelatedRecipes
       tags: [recipes]
-      summary: Recipes related to the given recipe
+      summary: Recipes related to the given recipe (fixed set of 3)
       parameters:
         - name: slug
           in: path
           required: true
           schema: { type: string }
-        - name: limit
-          in: query
-          schema: { type: integer, default: 3 }
       responses:
         "200":
           description: Related recipes
@@ -254,9 +251,9 @@ components:
         description: { type: string }
         category: { type: string }
         imageUrl: { type: string }
-        prepMinutes: { type: integer }
-        cookMinutes: { type: integer }
-        totalMinutes: { type: integer }
+        prepMinutes: { type: ["integer", "null"] }
+        cookMinutes: { type: ["integer", "null"] }
+        totalMinutes: { type: ["integer", "null"] }
         dietaryTags:
           type: array
           items: { type: string }
@@ -294,10 +291,11 @@ components:
         category: { type: string }
         cuisine: { type: string }
         imageUrl: { type: string }
-        prepMinutes: { type: integer }
-        cookMinutes: { type: integer }
-        totalMinutes: { type: integer }
-        servings: { type: integer }
+        prepMinutes: { type: ["integer", "null"] }
+        cookMinutes: { type: ["integer", "null"] }
+        totalMinutes: { type: ["integer", "null"] }
+        servings: { type: ["integer", "null"] }
+        sourceUrl: { type: ["string", "null"] }
         dietaryTags:
           type: array
           items: { type: string }
