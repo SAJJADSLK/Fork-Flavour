@@ -10,6 +10,12 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: recipes
+    description: Recipe browsing, search, and detail operations
+  - name: categories
+    description: Recipe category listings
+  - name: kitchen-ai
+    description: AI-assisted smart search and ingredient substitution
 paths:
   /healthz:
     get:
@@ -24,6 +30,168 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /recipes:
+    get:
+      operationId: listRecipes
+      tags: [recipes]
+      summary: List/search recipes
+      description: Returns recipes, optionally filtered by category, dietary tag, or a free-text/smart-search query.
+      parameters:
+        - name: query
+          in: query
+          schema: { type: string }
+          description: Free-text or natural-language search, e.g. "chicken thighs and 20 minutes"
+        - name: category
+          in: query
+          schema: { type: string }
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [popular, recent]
+      responses:
+        "200":
+          description: Matching recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecipeSummary"
+
+  /recipes/popular:
+    get:
+      operationId: listPopularRecipes
+      tags: [recipes]
+      summary: Most popular recipes
+      description: Top-rated/most-reviewed recipes for homepage highlights.
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 5 }
+      responses:
+        "200":
+          description: Popular recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecipeSummary"
+
+  /recipes/recent:
+    get:
+      operationId: listRecentRecipes
+      tags: [recipes]
+      summary: Most recently added recipes
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 4 }
+      responses:
+        "200":
+          description: Recent recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecipeSummary"
+
+  /recipes/{slug}:
+    get:
+      operationId: getRecipe
+      tags: [recipes]
+      summary: Get a recipe by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Recipe detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /recipes/{slug}/related:
+    get:
+      operationId: getRelatedRecipes
+      tags: [recipes]
+      summary: Recipes related to the given recipe
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 3 }
+      responses:
+        "200":
+          description: Related recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecipeSummary"
+
+  /recipes/{slug}/substitute:
+    post:
+      operationId: substituteIngredient
+      tags: [kitchen-ai]
+      summary: AI-assisted ingredient substitution for a specific recipe
+      description: Given an ingredient the cook is missing (and optional extra context), returns a substitution suggestion grounded in the recipe's context.
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubstitutionRequest"
+      responses:
+        "200":
+          description: Substitution suggestion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubstitutionResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List recipe categories with counts
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +202,140 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+
+    Ingredient:
+      type: object
+      required: [item]
+      properties:
+        item: { type: string }
+        note: { type: ["string", "null"] }
+
+    InstructionStep:
+      type: object
+      required: [step, text]
+      properties:
+        step: { type: integer }
+        text: { type: string }
+        timerMinutes: { type: ["integer", "null"] }
+
+    Nutrition:
+      type: object
+      properties:
+        calories: { type: ["integer", "null"] }
+        proteinG: { type: ["integer", "null"] }
+        carbsG: { type: ["integer", "null"] }
+        fatG: { type: ["integer", "null"] }
+
+    RecipeSummary:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - description
+        - category
+        - imageUrl
+        - prepMinutes
+        - cookMinutes
+        - totalMinutes
+        - dietaryTags
+        - cookMethod
+        - rating
+        - reviewCount
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        title: { type: string }
+        description: { type: string }
+        category: { type: string }
+        imageUrl: { type: string }
+        prepMinutes: { type: integer }
+        cookMinutes: { type: integer }
+        totalMinutes: { type: integer }
+        dietaryTags:
+          type: array
+          items: { type: string }
+        cookMethod: { type: string }
+        rating: { type: number }
+        reviewCount: { type: integer }
+
+    Recipe:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - description
+        - category
+        - cuisine
+        - imageUrl
+        - prepMinutes
+        - cookMinutes
+        - totalMinutes
+        - servings
+        - dietaryTags
+        - cookMethod
+        - rating
+        - reviewCount
+        - ingredients
+        - instructions
+        - nutrition
+        - createdAt
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        title: { type: string }
+        description: { type: string }
+        category: { type: string }
+        cuisine: { type: string }
+        imageUrl: { type: string }
+        prepMinutes: { type: integer }
+        cookMinutes: { type: integer }
+        totalMinutes: { type: integer }
+        servings: { type: integer }
+        dietaryTags:
+          type: array
+          items: { type: string }
+        cookMethod: { type: string }
+        rating: { type: number }
+        reviewCount: { type: integer }
+        ingredients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ingredient"
+        instructions:
+          type: array
+          items:
+            $ref: "#/components/schemas/InstructionStep"
+        nutrition:
+          $ref: "#/components/schemas/Nutrition"
+        createdAt:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      required: [name, imageUrl, recipeCount]
+      properties:
+        name: { type: string }
+        imageUrl: { type: string }
+        recipeCount: { type: integer }
+
+    SubstitutionRequest:
+      type: object
+      required: [ingredient]
+      properties:
+        ingredient: { type: string, minLength: 1 }
+        note: { type: string }
+
+    SubstitutionResponse:
+      type: object
+      required: [ingredient, suggestion]
+      properties:
+        ingredient: { type: string }
+        suggestion: { type: string }
