@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Fork & Flavor"
+version = "1.0.0"
+id = "artifacts/fork-and-flavor"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25675
+
+[services.development]
+run = "pnpm --filter @workspace/fork-and-flavor run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/fork-and-flavor", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/fork-and-flavor/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25675"
+BASE_PATH = "/"
