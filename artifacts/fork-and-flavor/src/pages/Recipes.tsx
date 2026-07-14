@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { X, SlidersHorizontal } from "lucide-react";
 import { useMemo } from "react";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 export default function Recipes() {
   const [location, setLocation] = useLocation();
@@ -24,6 +25,16 @@ export default function Recipes() {
   });
   
   const { data: categories } = useListCategories();
+
+  useDocumentMeta({
+    title: categoryFilter
+      ? `${categoryFilter} Recipes | Fork & Flavor`
+      : "Browse Recipes | Fork & Flavor",
+    description: categoryFilter
+      ? `Browse ${categoryFilter.toLowerCase()} recipes with clear ingredients, timing, and instructions.`
+      : "Browse hundreds of recipes with clear ingredients, timing, and instructions — no life stories, just recipes that work.",
+    canonicalPath: "/recipes",
+  });
 
   // Handlers
   const handleCategoryClick = (cat: string) => {

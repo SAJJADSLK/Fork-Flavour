@@ -1,4 +1,12 @@
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
+
 export default function Terms() {
+  useDocumentMeta({
+    title: "Terms of Service | Fork & Flavor",
+    description: "The terms governing use of Fork & Flavor's recipe content.",
+    canonicalPath: "/terms",
+  });
+
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <h1 className="font-serif text-4xl font-bold mb-8">Terms of Service</h1>

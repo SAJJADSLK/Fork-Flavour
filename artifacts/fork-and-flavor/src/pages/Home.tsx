@@ -3,11 +3,18 @@ import { RecipeCard, RecipeCardSkeleton } from "@/components/RecipeCard";
 import { NaturalLanguageSearch } from "@/components/NaturalLanguageSearch";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 export default function Home() {
   const { data: popularRecipes, isLoading: isLoadingPopular } = useListPopularRecipes({ limit: 4 });
   const { data: recentRecipes, isLoading: isLoadingRecent } = useListRecentRecipes({ limit: 4 });
   const { data: categories, isLoading: isLoadingCategories } = useListCategories();
+
+  useDocumentMeta({
+    title: "Fork & Flavor — Structured Recipes for Home Cooks",
+    description: "A structured recipe library for home cooks who cook. Clear timing, real ingredients, and substitutions that make sense — no life stories.",
+    canonicalPath: "/",
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -28,7 +35,7 @@ export default function Home() {
             Structured data.<br/>Not life stories.
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto font-sans">
-            Tested recipes designed for home cooks who cook. Precise timing, accurate nutrition, and substitutions that make sense.
+            A structured recipe library for home cooks who cook. Clear timing, real ingredients, and substitutions that make sense.
           </p>
           
           <NaturalLanguageSearch />
@@ -74,11 +81,11 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="font-serif text-3xl font-bold mb-2">Popular Right Now</h2>
-              <p className="text-muted-foreground">The most cooked and highest rated recipes this week.</p>
+              <h2 className="font-serif text-3xl font-bold mb-2">Editor's Picks</h2>
+              <p className="text-muted-foreground">Recipes tested in our own kitchen, start to finish.</p>
             </div>
             <Link href="/recipes?sort=popular" className="inline-flex items-center gap-2 text-primary font-medium hover:underline underline-offset-4">
-              View all popular <ArrowRight className="w-4 h-4" />
+              View all picks <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           
@@ -113,7 +120,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
               <h2 className="font-serif text-3xl font-bold mb-2">Latest additions</h2>
-              <p className="text-muted-foreground">Fresh from our test kitchen to yours.</p>
+              <p className="text-muted-foreground">The newest recipes in the library.</p>
             </div>
             <Link href="/recipes?sort=recent" className="inline-flex items-center gap-2 text-primary font-medium hover:underline underline-offset-4">
               View all new recipes <ArrowRight className="w-4 h-4" />

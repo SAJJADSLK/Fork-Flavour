@@ -1,1 +1,2 @@
 - [Orval codegen name collisions](orval-codegen-collisions.md) — path+query params on one operation, or a schema name shared between value/type generators, causes TS2308/TS2693; fix in the OpenAPI spec, not generated code.
+- [Fake social-proof data](fake-social-proof-data.md) — hand-authored seed/demo content should default ratings/reviews to 0, never invented numbers.

@@ -7,6 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Clock, Users, Flame, ChefHat, Star, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
+import { useJsonLd } from "@/hooks/useJsonLd";
 
 export default function RecipeDetail() {
   const [, params] = useRoute("/recipe/:slug");
@@ -14,6 +16,55 @@ export default function RecipeDetail() {
 
   const { data: recipe, isLoading, isError } = useGetRecipe(slug);
   const { data: relatedRecipes } = useGetRelatedRecipes(slug);
+
+  useDocumentMeta({
+    title: recipe ? `${recipe.title} Recipe | Fork & Flavor` : "Recipe | Fork & Flavor",
+    description: recipe?.description,
+    canonicalPath: `/recipe/${slug}`,
+  });
+
+  useJsonLd(
+    recipe
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Recipe",
+          name: recipe.title,
+          description: recipe.description,
+          image: recipe.imageUrl ? [recipe.imageUrl] : undefined,
+          recipeCategory: recipe.category,
+          recipeCuisine: recipe.cuisine,
+          recipeYield: recipe.servings != null ? `${recipe.servings} servings` : undefined,
+          prepTime: recipe.prepMinutes != null ? `PT${recipe.prepMinutes}M` : undefined,
+          cookTime: recipe.cookMinutes != null ? `PT${recipe.cookMinutes}M` : undefined,
+          totalTime: recipe.totalMinutes != null ? `PT${recipe.totalMinutes}M` : undefined,
+          recipeIngredient: recipe.ingredients.map((i) =>
+            i.note ? `${i.item} (${i.note})` : i.item,
+          ),
+          recipeInstructions: recipe.instructions.map((step) => ({
+            "@type": "HowToStep",
+            text: step.text,
+          })),
+          nutrition:
+            recipe.nutrition.calories != null
+              ? {
+                  "@type": "NutritionInformation",
+                  calories: `${recipe.nutrition.calories} calories`,
+                  proteinContent: recipe.nutrition.proteinG != null ? `${recipe.nutrition.proteinG}g` : undefined,
+                  carbohydrateContent: recipe.nutrition.carbsG != null ? `${recipe.nutrition.carbsG}g` : undefined,
+                  fatContent: recipe.nutrition.fatG != null ? `${recipe.nutrition.fatG}g` : undefined,
+                }
+              : undefined,
+          aggregateRating:
+            recipe.reviewCount > 0
+              ? {
+                  "@type": "AggregateRating",
+                  ratingValue: recipe.rating,
+                  reviewCount: recipe.reviewCount,
+                }
+              : undefined,
+        }
+      : null,
+  );
 
   if (isLoading) {
     return (

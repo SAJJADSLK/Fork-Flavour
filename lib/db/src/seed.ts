@@ -16,8 +16,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["Gluten-Free", "High-Protein"],
     cookMethod: "Roasted",
-    rating: 4.8,
-    reviewCount: 412,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1 whole chicken (4-5 lb)", note: "patted fully dry" },
       { item: "1 lemon", note: "halved" },
@@ -54,8 +54,8 @@ const recipes: InsertRecipe[] = [
     servings: 18,
     dietaryTags: ["Vegetarian"],
     cookMethod: "Baked",
-    rating: 4.9,
-    reviewCount: 588,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1 cup butter", note: "browned and cooled" },
       { item: "1 cup brown sugar", note: null },
@@ -93,8 +93,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["High-Protein"],
     cookMethod: "Pan-Seared",
-    rating: 4.7,
-    reviewCount: 301,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1 lb ground beef (80/20)", note: "loosely formed into 4 balls" },
       { item: "4 slices American cheese", note: null },
@@ -130,8 +130,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["Vegetarian", "Gluten-Free"],
     cookMethod: "Simmered",
-    rating: 4.6,
-    reviewCount: 219,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "2 tbsp red curry paste", note: null },
       { item: "2 cans coconut milk", note: null },
@@ -168,8 +168,8 @@ const recipes: InsertRecipe[] = [
     servings: 2,
     dietaryTags: ["Vegetarian", "Gluten-Free", "High-Protein"],
     cookMethod: "Stovetop",
-    rating: 4.7,
-    reviewCount: 156,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "5 eggs", note: null },
       { item: "2 tbsp butter", note: null },
@@ -204,8 +204,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["Vegan", "Gluten-Free"],
     cookMethod: "No-Cook",
-    rating: 4.5,
-    reviewCount: 98,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "2 bulbs fennel", note: "shaved thin" },
       { item: "3 blood oranges", note: "segmented" },
@@ -239,8 +239,8 @@ const recipes: InsertRecipe[] = [
     servings: 12,
     dietaryTags: ["Vegetarian"],
     cookMethod: "Baked",
-    rating: 4.8,
-    reviewCount: 174,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1/3 cup flour", note: "for tangzhong" },
       { item: "1/2 cup milk", note: "for tangzhong" },
@@ -279,8 +279,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["Gluten-Free"],
     cookMethod: "Stovetop",
-    rating: 4.7,
-    reviewCount: 143,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1 1/2 cups arborio rice", note: null },
       { item: "5 cups chicken stock", note: "kept warm" },
@@ -318,8 +318,8 @@ const recipes: InsertRecipe[] = [
     servings: 6,
     dietaryTags: ["Vegetarian", "Gluten-Free"],
     cookMethod: "Chilled",
-    rating: 4.6,
-    reviewCount: 87,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "2 cups heavy cream", note: null },
       { item: "1/2 cup whole milk", note: null },
@@ -355,8 +355,8 @@ const recipes: InsertRecipe[] = [
     servings: 4,
     dietaryTags: ["High-Protein", "Gluten-Free"],
     cookMethod: "Grilled",
-    rating: 4.7,
-    reviewCount: 132,
+    rating: 0,
+    reviewCount: 0,
     ingredients: [
       { item: "1 lb ground lamb", note: null },
       { item: "1 small onion", note: "grated and squeezed dry" },
@@ -384,9 +384,13 @@ const recipes: InsertRecipe[] = [
 
 async function seed() {
   for (const recipe of recipes) {
-    await db.insert(recipesTable).values(recipe).onConflictDoNothing({
-      target: recipesTable.slug,
-    });
+    await db
+      .insert(recipesTable)
+      .values(recipe)
+      .onConflictDoUpdate({
+        target: recipesTable.slug,
+        set: recipe,
+      });
   }
   console.log(`Seeded ${recipes.length} recipes.`);
   process.exit(0);

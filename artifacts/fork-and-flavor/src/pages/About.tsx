@@ -1,7 +1,14 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 export default function About() {
+  useDocumentMeta({
+    title: "Our Philosophy | Fork & Flavor",
+    description: "Why Fork & Flavor exists: structured, tested recipe data over life stories.",
+    canonicalPath: "/about",
+  });
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-muted">
@@ -46,8 +53,8 @@ export default function About() {
             <div className="flex gap-4">
               <CheckCircle2 className="w-6 h-6 text-primary shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-foreground text-xl mb-2 font-serif">Tested recipes, never generated.</h3>
-                <p>Every recipe on this site is tested data. We use AI to help you search ("chicken thighs and 20 minutes") and substitute ingredients, but we never let it rewrite a tested recipe.</p>
+                <h3 className="font-semibold text-foreground text-xl mb-2 font-serif">Real recipes, never generated.</h3>
+                <p>Our founding recipes are tested in our own kitchen. We've also built a much larger library sourced from TheMealDB's public database, credited on every page it appears — never invented, never AI-written. We use AI only to help you search ("chicken thighs and 20 minutes") and suggest substitutions, never to write a recipe.</p>
               </div>
             </div>
 

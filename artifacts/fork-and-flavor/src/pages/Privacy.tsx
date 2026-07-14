@@ -1,4 +1,12 @@
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
+
 export default function Privacy() {
+  useDocumentMeta({
+    title: "Privacy Policy | Fork & Flavor",
+    description: "How Fork & Flavor handles data, cookies, and advertising.",
+    canonicalPath: "/privacy",
+  });
+
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <h1 className="font-serif text-4xl font-bold mb-8">Privacy Policy</h1>

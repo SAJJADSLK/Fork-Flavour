@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { eq, desc, ilike } from "drizzle-orm";
+import { eq, desc, ilike, sql } from "drizzle-orm";
 import { db, recipesTable, type RecipeRow } from "@workspace/db";
 import {
   ListRecipesQueryParams,
@@ -53,10 +53,18 @@ function toDetail(recipe: RecipeRow) {
   };
 }
 
+// There is no real popularity signal yet (no reviews have been collected),
+// so "Popular" surfaces our own kitchen-tested recipes (no sourceUrl) ahead
+// of the wider imported library, rather than faking a ranking.
 router.get("/recipes/popular", async (req, res) => {
   const limit = req.query.limit ? Number(req.query.limit) : 5;
   const rows = await db.query.recipesTable.findMany({
-    orderBy: [desc(recipesTable.reviewCount), desc(recipesTable.rating)],
+    orderBy: [
+      sql`${recipesTable.sourceUrl} IS NOT NULL`,
+      desc(recipesTable.reviewCount),
+      desc(recipesTable.rating),
+      desc(recipesTable.createdAt),
+    ],
     limit,
   });
   res.json(rows.map(toSummary));
@@ -83,9 +91,18 @@ router.get("/recipes", async (req, res) => {
   if (params.query && params.query.trim().length > 0) {
     rows = rankRecipesByIntent(rows, params.query);
   } else if (params.sort === "popular") {
-    rows = [...rows].sort(
-      (a, b) => b.reviewCount - a.reviewCount || b.rating - a.rating,
-    );
+    // Same honest fallback as /recipes/popular: kitchen-tested originals
+    // first, then reviewed/rated recipes, then most recent.
+    rows = [...rows].sort((a, b) => {
+      const aOriginal = a.sourceUrl == null;
+      const bOriginal = b.sourceUrl == null;
+      if (aOriginal !== bOriginal) return aOriginal ? -1 : 1;
+      return (
+        b.reviewCount - a.reviewCount ||
+        b.rating - a.rating ||
+        b.createdAt.getTime() - a.createdAt.getTime()
+      );
+    });
   } else if (params.sort === "recent") {
     rows = [...rows].sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
