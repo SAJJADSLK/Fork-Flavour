@@ -174,6 +174,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /recipes/{slug}/rate:
+    post:
+      operationId: rateRecipe
+      tags: [recipes]
+      summary: Submit a 1-5 star rating for a recipe
+      description: Records a reader's star rating and returns the recipe's updated aggregate rating and review count.
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RatingRequest"
+      responses:
+        "200":
+          description: Updated aggregate rating
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RatingResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /categories:
     get:
       operationId: listCategories
@@ -337,3 +368,16 @@ components:
       properties:
         ingredient: { type: string }
         suggestion: { type: string }
+
+    RatingRequest:
+      type: object
+      required: [rating]
+      properties:
+        rating: { type: integer, minimum: 1, maximum: 5 }
+
+    RatingResponse:
+      type: object
+      required: [rating, reviewCount]
+      properties:
+        rating: { type: number }
+        reviewCount: { type: integer }

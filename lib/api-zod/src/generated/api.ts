@@ -191,6 +191,28 @@ export const SubstituteIngredientResponse = zod.object({
 
 
 /**
+ * Records a reader's star rating and returns the recipe's updated aggregate rating and review count.
+ * @summary Submit a 1-5 star rating for a recipe
+ */
+export const RateRecipeParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const rateRecipeBodyRatingMax = 5;
+
+
+
+export const RateRecipeBody = zod.object({
+  "rating": zod.number().min(1).max(rateRecipeBodyRatingMax)
+})
+
+export const RateRecipeResponse = zod.object({
+  "rating": zod.number(),
+  "reviewCount": zod.number()
+})
+
+
+/**
  * @summary List recipe categories with counts
  */
 export const ListCategoriesResponseItem = zod.object({

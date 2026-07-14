@@ -26,6 +26,8 @@ import type {
   ListPopularRecipesParams,
   ListRecentRecipesParams,
   ListRecipesParams,
+  RatingRequest,
+  RatingResponse,
   Recipe,
   RecipeSummary,
   SubstitutionRequest,
@@ -616,6 +618,79 @@ export const useSubstituteIngredient = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getSubstituteIngredientMutationOptions(options));
+    }
+
+export const getRateRecipeUrl = (slug: string,) => {
+
+
+
+
+  return `/api/recipes/${slug}/rate`
+}
+
+/**
+ * Records a reader's star rating and returns the recipe's updated aggregate rating and review count.
+ * @summary Submit a 1-5 star rating for a recipe
+ */
+export const rateRecipe = async (slug: string,
+    ratingRequest: RatingRequest, options?: RequestInit): Promise<RatingResponse> => {
+
+  return customFetch<RatingResponse>(getRateRecipeUrl(slug),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(ratingRequest)
+  }
+);}
+
+
+
+
+
+export const getRateRecipeMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rateRecipe>>, TError,{slug: string;data: BodyType<RatingRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof rateRecipe>>, TError,{slug: string;data: BodyType<RatingRequest>}, TContext> => {
+
+const mutationKey = ['rateRecipe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rateRecipe>>, {slug: string;data: BodyType<RatingRequest>}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  rateRecipe(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RateRecipeMutationResult = NonNullable<Awaited<ReturnType<typeof rateRecipe>>>
+    export type RateRecipeMutationBody = BodyType<RatingRequest>
+    export type RateRecipeMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Submit a 1-5 star rating for a recipe
+ */
+export const useRateRecipe = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rateRecipe>>, TError,{slug: string;data: BodyType<RatingRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof rateRecipe>>,
+        TError,
+        {slug: string;data: BodyType<RatingRequest>},
+        TContext
+      > => {
+      return useMutation(getRateRecipeMutationOptions(options));
     }
 
 export const getListCategoriesUrl = () => {

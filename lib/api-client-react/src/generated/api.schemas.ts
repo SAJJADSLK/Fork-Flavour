@@ -101,6 +101,19 @@ export interface SubstitutionResponse {
   suggestion: string;
 }
 
+export interface RatingRequest {
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  rating: number;
+}
+
+export interface RatingResponse {
+  rating: number;
+  reviewCount: number;
+}
+
 export type ListRecipesParams = {
 /**
  * Free-text or natural-language search, e.g. "chicken thighs and 20 minutes"

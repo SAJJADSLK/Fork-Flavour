@@ -6,6 +6,8 @@ import {
   GetRecipeParams,
   SubstituteIngredientParams,
   SubstituteIngredientBody,
+  RateRecipeParams,
+  RateRecipeBody,
   type ErrorResponse,
 } from "@workspace/api-zod";
 
@@ -149,6 +151,39 @@ router.get("/recipes/:slug/related", async (req, res) => {
     .slice(0, 3);
 
   res.json(related.map(toSummary));
+});
+
+// Readers submit a 1-5 star rating; we fold it into a running average rather
+// than requiring accounts. This is the only source of real rating/review
+// data on the site (no fabricated numbers).
+router.post("/recipes/:slug/rate", async (req, res) => {
+  const { slug } = RateRecipeParams.parse(req.params);
+  const body = RateRecipeBody.parse(req.body);
+
+  const recipe = await db.query.recipesTable.findFirst({
+    where: eq(recipesTable.slug, slug),
+  });
+  if (!recipe) {
+    res
+      .status(404)
+      .json(errorResponse(`No recipe found for "${slug}"`));
+    return;
+  }
+
+  const newReviewCount = recipe.reviewCount + 1;
+  const newRating =
+    (recipe.rating * recipe.reviewCount + body.rating) / newReviewCount;
+
+  const [updated] = await db
+    .update(recipesTable)
+    .set({
+      rating: Math.round(newRating * 10) / 10,
+      reviewCount: newReviewCount,
+    })
+    .where(eq(recipesTable.slug, slug))
+    .returning();
+
+  res.json({ rating: updated.rating, reviewCount: updated.reviewCount });
 });
 
 router.post("/recipes/:slug/substitute", async (req, res) => {

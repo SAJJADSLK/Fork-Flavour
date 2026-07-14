@@ -9,6 +9,7 @@ import { Clock, Users, Flame, ChefHat, Star, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { useJsonLd } from "@/hooks/useJsonLd";
+import { RecipeRating } from "@/components/RecipeRating";
 
 export default function RecipeDetail() {
   const [, params] = useRoute("/recipe/:slug");
@@ -231,6 +232,8 @@ export default function RecipeDetail() {
                 </div>
               </div>
             )}
+
+            <RecipeRating slug={recipe.slug} rating={recipe.rating} reviewCount={recipe.reviewCount} />
 
             <SubstitutionHelper recipeSlug={recipe.slug} />
 

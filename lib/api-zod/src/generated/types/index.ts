@@ -16,6 +16,8 @@ export * from './listRecentRecipesParams';
 export * from './listRecipesParams';
 export * from './listRecipesSort';
 export * from './nutrition';
+export * from './ratingRequest';
+export * from './ratingResponse';
 export * from './recipe';
 export * from './recipeSummary';
 export * from './substitutionRequest';
