@@ -17,6 +17,21 @@ function errorResponse(error: string): ErrorResponse {
 import { rankRecipesByIntent } from "../lib/recipeSearch";
 import { suggestSubstitution } from "../lib/substitutions";
 
+// TheMealDB sometimes stores raw instruction text in the description field,
+// starting with step numbers like "1." or "1 First, ...". Detect and replace
+// these with a clean generated description so recipe pages have quality content.
+const STEP_PREFIX_RE = /^\s*\d+\.?\s+/;
+function sanitizeDescription(raw: string | null, title: string, cuisine: string | null, category: string | null): string {
+  if (!raw || STEP_PREFIX_RE.test(raw)) {
+    const parts: string[] = [];
+    if (cuisine && cuisine !== "Unknown") parts.push(cuisine);
+    if (category) parts.push(category.toLowerCase());
+    const base = parts.length ? `A classic ${parts.join(" ")} dish` : "A delicious recipe";
+    return `${base} — ${title}. Follow the step-by-step instructions and ingredient list below to make this at home.`;
+  }
+  return raw;
+}
+
 const router: IRouter = Router();
 
 function toSummary(recipe: RecipeRow) {
@@ -24,7 +39,7 @@ function toSummary(recipe: RecipeRow) {
     id: recipe.id,
     slug: recipe.slug,
     title: recipe.title,
-    description: recipe.description,
+    description: sanitizeDescription(recipe.description, recipe.title, recipe.cuisine, recipe.category),
     category: recipe.category,
     imageUrl: recipe.imageUrl,
     prepMinutes: recipe.prepMinutes,

@@ -4,6 +4,7 @@ interface DocumentMetaOptions {
   title: string;
   description?: string;
   canonicalPath?: string;
+  ogImage?: string;
 }
 
 function setMetaTag(attr: "name" | "property", key: string, content: string) {
@@ -26,22 +27,35 @@ function setCanonical(path: string) {
   el.setAttribute("href", `${window.location.origin}${path}`);
 }
 
-/** Sets per-page title, meta description, OG/Twitter tags, and canonical URL. */
-export function useDocumentMeta({ title, description, canonicalPath }: DocumentMetaOptions) {
+/** Sets per-page title, meta description, OG/Twitter tags, canonical URL, and social image. */
+export function useDocumentMeta({ title, description, canonicalPath, ogImage }: DocumentMetaOptions) {
   useEffect(() => {
     const previousTitle = document.title;
     document.title = title;
+
     if (description) {
       setMetaTag("name", "description", description);
       setMetaTag("property", "og:description", description);
       setMetaTag("name", "twitter:description", description);
     }
+
     setMetaTag("property", "og:title", title);
     setMetaTag("name", "twitter:title", title);
-    if (canonicalPath) setCanonical(canonicalPath);
+    setMetaTag("property", "og:type", "website");
+    setMetaTag("name", "twitter:card", ogImage ? "summary_large_image" : "summary");
+
+    if (ogImage) {
+      setMetaTag("property", "og:image", ogImage);
+      setMetaTag("name", "twitter:image", ogImage);
+    }
+
+    if (canonicalPath) {
+      setCanonical(canonicalPath);
+      setMetaTag("property", "og:url", `${window.location.origin}${canonicalPath}`);
+    }
 
     return () => {
       document.title = previousTitle;
     };
-  }, [title, description, canonicalPath]);
+  }, [title, description, canonicalPath, ogImage]);
 }

@@ -38,7 +38,7 @@ export function Footer() {
         
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Fork & Flavor. All rights reserved.</p>
-          <p className="font-mono bg-muted px-2 py-1 rounded">Version 1.0.0</p>
+          <p>Recipes sourced from <a href="https://www.themealdb.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">TheMealDB</a></p>
         </div>
       </div>
     </footer>
