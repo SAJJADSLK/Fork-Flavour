@@ -1,0 +1,12 @@
+# Ignore build artifacts from the current environment
+artifacts/api-server/dist
+artifacts/fork-and-flavor/dist
+artifacts/mockup-sandbox
+
+# Ignore test / docs / local tooling
+.local
+.agents
+attached_assets
+scripts
+*.log
+*.map

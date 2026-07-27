@@ -5,27 +5,15 @@ import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
-const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    'PORT environment variable is required but was not provided.',
-  );
-}
-
+// PORT is only used by the dev/preview server — not needed during `vite build`.
+// Default to 3000 so the config loads cleanly in CI / Vercel build environments.
+const rawPort = process.env.PORT ?? "3000";
 const port = Number(rawPort);
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
-  throw new Error(
-    'BASE_PATH environment variable is required but was not provided.',
-  );
-}
+// BASE_PATH controls the Vite `base` option and the wouter router base.
+// On Replit the artifact system sets it to the path prefix (e.g. "/").
+// On Vercel (and any root deployment) default to "/" so the app works out of the box.
+const basePath = process.env.BASE_PATH ?? "/";
 
 export default defineConfig({
   base: basePath,
