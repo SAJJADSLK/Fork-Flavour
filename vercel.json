@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm -w run vercel-build",
+  "buildCommand": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build",
   "outputDirectory": "artifacts/fork-and-flavor/dist/public",
   "functions": {
     "api/index.ts": {
