@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "yxM9gKwQ6VfkwKjSfw6cH"
+uri = "file://fork-and-flavor-src.zip"
+type = "unspecified"
+title = "Fork & Flavor — Source Code"
