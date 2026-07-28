@@ -5,9 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { Ingredient } from './ingredient';
-import type { InstructionStep } from './instructionStep';
-import type { Nutrition } from './nutrition';
+import type { Ingredient } from './ingredient.js';
+import type { InstructionStep } from './instructionStep.js';
+import type { Nutrition } from './nutrition.js';
 
 export interface Recipe {
   id: number;

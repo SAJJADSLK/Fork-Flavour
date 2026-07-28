@@ -6,19 +6,19 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './category';
-export * from './errorResponse';
-export * from './healthStatus';
-export * from './ingredient';
-export * from './instructionStep';
-export * from './listPopularRecipesParams';
-export * from './listRecentRecipesParams';
-export * from './listRecipesParams';
-export * from './listRecipesSort';
-export * from './nutrition';
-export * from './ratingRequest';
-export * from './ratingResponse';
-export * from './recipe';
-export * from './recipeSummary';
-export * from './substitutionRequest';
-export * from './substitutionResponse';
+export * from './category.js';
+export * from './errorResponse.js';
+export * from './healthStatus.js';
+export * from './ingredient.js';
+export * from './instructionStep.js';
+export * from './listPopularRecipesParams.js';
+export * from './listRecentRecipesParams.js';
+export * from './listRecipesParams.js';
+export * from './listRecipesSort.js';
+export * from './nutrition.js';
+export * from './ratingRequest.js';
+export * from './ratingResponse.js';
+export * from './recipe.js';
+export * from './recipeSummary.js';
+export * from './substitutionRequest.js';
+export * from './substitutionResponse.js';

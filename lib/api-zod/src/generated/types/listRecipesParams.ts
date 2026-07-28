@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ListRecipesSort } from './listRecipesSort';
+import type { ListRecipesSort } from './listRecipesSort.js';
 
 export type ListRecipesParams = {
 /**
