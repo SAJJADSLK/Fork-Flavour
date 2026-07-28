@@ -14,8 +14,8 @@ import {
 function errorResponse(error: string): ErrorResponse {
   return { error };
 }
-import { rankRecipesByIntent } from "../lib/recipeSearch";
-import { suggestSubstitution } from "../lib/substitutions";
+import { rankRecipesByIntent } from "../lib/recipeSearch.js";
+import { suggestSubstitution } from "../lib/substitutions.js";
 
 // TheMealDB sometimes stores raw instruction text in the description field,
 // starting with step numbers like "1." or "1 First, ...". Detect and replace
