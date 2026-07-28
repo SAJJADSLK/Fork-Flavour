@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
@@ -10,12 +11,16 @@
     "typecheck:libs": "tsc --build",
     "vercel-build": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build"
   },
+
   "dependencies": {
     "@replit/connectors-sdk": "^0.4.1"
   },
+
   "devDependencies": {
+    "@types/node": "^22.10.0",
     "prettier": "^3.9.4",
     "typescript": "~5.9.3"
   },
+
   "packageManager": "pnpm@10.0.0"
 }
