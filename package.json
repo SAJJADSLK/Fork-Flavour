@@ -8,7 +8,7 @@
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "typecheck:libs": "tsc --build",
-    "vercel-build": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build"
+    "vercel-build": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build && pnpm --filter @workspace/api-server run build:function"
   },
   "dependencies": {
     "@replit/connectors-sdk": "^0.4.1"

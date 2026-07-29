@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build",
+  "buildCommand": "BASE_PATH=/ PORT=3000 pnpm --filter @workspace/fork-and-flavor run build && pnpm --filter @workspace/api-server run build:function",
   "outputDirectory": "public",
   "framework": null,
   "functions": {
