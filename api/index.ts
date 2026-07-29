@@ -19,7 +19,10 @@ import type { IncomingMessage, ServerResponse } from "http";
 // cannot `require()` an ESM file, so we lazily `import()` it instead — the
 // module is cached after the first invocation, so this only costs an extra
 // await on cold start.
-let appPromise: Promise<import("express").Express> | undefined;
+type AppModule = typeof import("../artifacts/api-server/src/app.js");
+type ExpressApp = AppModule["default"];
+
+let appPromise: Promise<ExpressApp> | undefined;
 
 function getApp() {
   if (!appPromise) {
