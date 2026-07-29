@@ -10,6 +10,30 @@
  *   DATABASE_URL  — PostgreSQL connection string (Neon, Supabase, Railway, etc.)
  *   NODE_ENV      — set to "production"
  */
-import app from "../artifacts/api-server/src/app";
+import type { IncomingMessage, ServerResponse } from "http";
 
-export default app;
+// `artifacts/api-server` has its own package.json with "type": "module", so
+// Vercel's @vercel/node builder emits app.js as an ES module. This function's
+// entry point (api/index.ts) sits under the workspace root package.json,
+// which has no "type" field and therefore compiles to CommonJS. A CJS file
+// cannot `require()` an ESM file, so we lazily `import()` it instead — the
+// module is cached after the first invocation, so this only costs an extra
+// await on cold start.
+let appPromise: Promise<import("express").Express> | undefined;
+
+function getApp() {
+  if (!appPromise) {
+    appPromise = import("../artifacts/api-server/src/app.js").then(
+      (mod) => mod.default,
+    );
+  }
+  return appPromise;
+}
+
+export default async function handler(
+  req: IncomingMessage,
+  res: ServerResponse,
+) {
+  const app = await getApp();
+  return app(req, res);
+}
