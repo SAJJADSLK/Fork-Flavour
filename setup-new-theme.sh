@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+# 1) overwrite index.css (new theme: Ink/Paper/Cayenne/Butter/Herb/Steel)
+cat > artifacts/fork-and-flavor/src/index.css << 'INDEXCSS_EOF'
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -257,3 +262,144 @@
   }
 }
 
+INDEXCSS_EOF
+
+# 2) overwrite RecipeCard.tsx (adds the order-ticket signature strip)
+cat > artifacts/fork-and-flavor/src/components/RecipeCard.tsx << 'RECIPECARD_EOF'
+import { Link } from "wouter";
+import { Clock, Star } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import type { RecipeSummary } from "@workspace/api-client-react";
+
+interface RecipeCardProps {
+  recipe: RecipeSummary;
+}
+
+export function RecipeCard({ recipe }: RecipeCardProps) {
+  return (
+    <Link href={`/recipe/${recipe.slug}`} className="block group h-full">
+      <Card className="h-full overflow-hidden rounded-md border-2 border-card-border bg-card shadow-none transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-md">
+        <div className="relative aspect-[4/3] overflow-hidden border-b-2 border-card-border">
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.title}
+            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div className="absolute top-3 left-3 flex gap-2">
+            <Badge variant="secondary" className="bg-background/95 backdrop-blur-sm text-foreground border border-card-border rounded-sm">
+              {recipe.category}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Order-ticket strip: mono numerals, dashed rule, like a chit off the kitchen rail */}
+        <div className="ticket-strip flex items-center justify-between px-4 py-2 pt-3 text-muted-foreground">
+          <div className="flex items-center gap-3">
+            {recipe.totalMinutes != null && (
+              <span className="flex items-center gap-1" title="Total time">
+                <Clock className="w-3.5 h-3.5" />
+                {recipe.totalMinutes}m
+              </span>
+            )}
+            <span className="flex items-center gap-1" title="Cooking method">
+              {recipe.cookMethod}
+            </span>
+          </div>
+          {recipe.reviewCount > 0 && (
+            <span className="flex items-center gap-1 text-foreground" title="Rating">
+              <Star className="w-3.5 h-3.5 fill-primary text-primary" />
+              {recipe.rating.toFixed(1)}
+            </span>
+          )}
+        </div>
+
+        <CardHeader className="p-4 pt-2 pb-2">
+          <h3 className="font-serif text-lg font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+            {recipe.title}
+          </h3>
+        </CardHeader>
+
+        <CardContent className="p-4 pt-0 text-sm text-muted-foreground">
+          {recipe.dietaryTags.length > 0 && (
+            <span className="text-xs uppercase tracking-wider font-semibold text-secondary">
+              {recipe.dietaryTags[0]}
+            </span>
+          )}
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+export function RecipeCardSkeleton() {
+  return (
+    <Card className="h-full rounded-md border-2 border-card-border shadow-none">
+      <div className="aspect-[4/3] bg-muted animate-pulse border-b-2 border-card-border" />
+      <div className="px-4 py-2 pt-3">
+        <div className="h-3 w-32 bg-muted animate-pulse rounded" />
+      </div>
+      <CardHeader className="p-4 pt-2 pb-2 space-y-2">
+        <div className="h-6 w-3/4 bg-muted animate-pulse rounded" />
+      </CardHeader>
+      <CardContent className="p-4 pt-0">
+        <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+      </CardContent>
+    </Card>
+  );
+}
+
+
+RECIPECARD_EOF
+
+# 3) overwrite Navbar.tsx (bolder logo mark + border)
+cat > artifacts/fork-and-flavor/src/components/layout/Navbar.tsx << 'NAVBAR_EOF'
+import { Link, useLocation } from "wouter";
+import { Search, UtensilsCrossed } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export function Navbar() {
+  const [location] = useLocation();
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80" data-testid="link-home-logo">
+          <div className="bg-primary text-primary-foreground p-1.5 rounded-sm border-2 border-foreground">
+            <UtensilsCrossed className="w-5 h-5" />
+          </div>
+          <span className="font-serif font-extrabold text-xl tracking-tight">Fork & Flavor</span>
+        </Link>
+        
+        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wide">
+          <Link 
+            href="/recipes" 
+            className={`transition-colors hover:text-primary ${location === "/recipes" ? "text-primary" : "text-muted-foreground"}`}
+          >
+            Recipes
+          </Link>
+          <Link 
+            href="/about" 
+            className={`transition-colors hover:text-primary ${location === "/about" ? "text-primary" : "text-muted-foreground"}`}
+          >
+            Philosophy
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-4">
+          <Link href="/recipes" className="hidden md:flex">
+            <Button variant="ghost" size="icon" className="rounded-sm" aria-label="Search recipes">
+              <Search className="w-5 h-5" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+NAVBAR_EOF
+
+echo "Theme files updated. Now run:"
+echo "  git add -A && git commit -m \"Redesign theme: bold/modern Ink-Cayenne-Butter palette\" && git push"
