@@ -10,6 +10,7 @@ import { Link } from "wouter";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { useJsonLd } from "@/hooks/useJsonLd";
 import { RecipeRating } from "@/components/RecipeRating";
+import { AdUnit } from "@/components/AdUnit";
 import type { Recipe } from "@workspace/api-client-react";
 
 // ── SEO helpers ────────────────────────────────────────────────────────────
@@ -390,6 +391,9 @@ export default function RecipeDetail() {
                 ))}
               </div>
             </section>
+
+            {/* Ad slot — set VITE_ADSENSE_CLIENT_ID and this slot ID in your AdSense dashboard */}
+            <AdUnit slot="1111111111" className="min-h-[90px]" />
 
             {/* Tips & Notes */}
             {tips.length > 0 && (

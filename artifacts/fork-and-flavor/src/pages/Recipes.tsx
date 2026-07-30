@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { X, SlidersHorizontal } from "lucide-react";
 import { useMemo } from "react";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
+import { AdUnit } from "@/components/AdUnit";
 
 export default function Recipes() {
   const [location, setLocation] = useLocation();
@@ -176,6 +177,9 @@ export default function Recipes() {
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
               </div>
+            )}
+            {recipes && recipes.length > 0 && (
+              <AdUnit slot="2222222222" className="min-h-[90px] mt-10" />
             )}
           </main>
         </div>
