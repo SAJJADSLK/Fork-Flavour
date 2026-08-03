@@ -62,85 +62,87 @@
 }
 
 /*
-  ── Fork & Flavor, take two ──────────────────────────────────────────────
-  Ink / Paper / Cayenne / Butter / Herb / Steel.
-  A test-kitchen aesthetic: high-contrast ink-on-paper, one vivid punch of
-  cayenne, mono numerals everywhere a time/temp/serving count appears (see
-  the "order ticket" strip on RecipeCard) — like chits off a kitchen rail,
-  not another cream-and-terracotta food blog.
+  ── Fork & Flavor, Editorial Gold ────────────────────────────────────────
+  Ivory / Ink / Gold / Champagne / Bronze.
+  A quiet-luxury editorial aesthetic: warm ivory paper, near-black ink type,
+  and a single restrained note of deep gold. Hard "kitchen chit" shadows and
+  the dashed order-ticket strip are gone, replaced by soft diffused shadows
+  and a slim gold-line divider (see .gold-divider on RecipeCard) — the kind
+  of fine hairline rule you'd find in a bound cookbook, not a ticket rail.
 */
 
 /* LIGHT MODE */
 :root {
-  --button-outline: rgba(23, 24, 28, 0.12);
-  --badge-outline: rgba(23, 24, 28, 0.08);
+  --button-outline: rgba(28, 22, 14, 0.12);
+  --badge-outline: rgba(28, 22, 14, 0.08);
 
   --opaque-button-border-intensity: -10;
 
-  --elevate-1: rgba(23, 24, 28, 0.04);
-  --elevate-2: rgba(23, 24, 28, 0.09);
+  --elevate-1: rgba(28, 22, 14, 0.035);
+  --elevate-2: rgba(28, 22, 14, 0.07);
 
-  --background: 60 9% 96%;
-  --foreground: 220 9% 10%;
-  --border: 220 9% 10%;
+  /* Ivory paper */
+  --background: 42 38% 96%;
+  --foreground: 20 16% 12%;
+  --border: 30 16% 22%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 220 9% 10%;
-  --card-border: 220 9% 10%;
+  --card: 40 40% 99%;
+  --card-foreground: 20 16% 12%;
+  --card-border: 32 18% 26%;
 
-  --sidebar: 60 9% 96%;
-  --sidebar-foreground: 220 9% 10%;
-  --sidebar-border: 220 9% 10%;
-  --sidebar-primary: 14 100% 56%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 60 9% 90%;
-  --sidebar-accent-foreground: 220 9% 10%;
-  --sidebar-ring: 14 100% 56%;
+  --sidebar: 42 38% 96%;
+  --sidebar-foreground: 20 16% 12%;
+  --sidebar-border: 30 16% 22%;
+  --sidebar-primary: 38 68% 47%;
+  --sidebar-primary-foreground: 20 16% 10%;
+  --sidebar-accent: 40 30% 90%;
+  --sidebar-accent-foreground: 20 16% 12%;
+  --sidebar-ring: 38 68% 47%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 220 9% 10%;
-  --popover-border: 220 9% 10%;
+  --popover: 40 40% 99%;
+  --popover-foreground: 20 16% 12%;
+  --popover-border: 32 18% 26%;
 
-  /* Cayenne */
-  --primary: 14 100% 56%;
-  --primary-foreground: 0 0% 100%;
+  /* Deep gold */
+  --primary: 38 68% 47%;
+  --primary-foreground: 20 16% 10%;
 
-  /* Herb */
-  --secondary: 154 42% 20%;
-  --secondary-foreground: 60 9% 96%;
+  /* Ink black, used as the secondary structural tone */
+  --secondary: 20 16% 12%;
+  --secondary-foreground: 42 38% 96%;
 
-  --muted: 60 5% 90%;
-  --muted-foreground: 220 6% 38%;
+  --muted: 40 22% 91%;
+  --muted-foreground: 30 9% 38%;
 
-  /* Butter */
-  --accent: 43 100% 63%;
-  --accent-foreground: 220 9% 10%;
+  /* Champagne — soft gold tint for highlights */
+  --accent: 40 55% 87%;
+  --accent-foreground: 20 16% 12%;
 
-  --destructive: 0 72% 46%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 4 58% 40%;
+  --destructive-foreground: 42 38% 96%;
 
-  --input: 220 9% 10%;
-  --ring: 14 100% 56%;
+  --input: 30 16% 22%;
+  --ring: 38 68% 47%;
 
-  --chart-1: 14 100% 56%;
-  --chart-2: 154 42% 20%;
-  --chart-3: 43 100% 63%;
-  --chart-4: 220 9% 10%;
-  --chart-5: 220 6% 60%;
+  --chart-1: 38 68% 47%;
+  --chart-2: 20 16% 12%;
+  --chart-3: 40 55% 87%;
+  --chart-4: 30 30% 32%;
+  --chart-5: 30 9% 55%;
 
   --app-font-sans: 'IBM Plex Sans', sans-serif;
   --app-font-serif: 'Bricolage Grotesque', sans-serif;
   --app-font-mono: 'IBM Plex Mono', monospace;
-  --radius: 0.375rem;
+  --radius: 0.5rem;
 
-  --shadow-2xs: 2px 2px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-xs: 3px 3px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-sm: 4px 4px 0px 0px rgba(23, 24, 28, 1);
-  --shadow: 5px 5px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-md: 6px 6px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-lg: 8px 8px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-xl: 10px 10px 0px 0px rgba(23, 24, 28, 1);
-  --shadow-2xl: 14px 14px 0px 0px rgba(23, 24, 28, 1);
+  --shadow-2xs: 0 1px 2px 0 rgba(28, 22, 14, 0.05);
+  --shadow-xs: 0 1px 3px 0 rgba(28, 22, 14, 0.07);
+  --shadow-sm: 0 2px 6px -1px rgba(28, 22, 14, 0.08);
+  --shadow: 0 4px 10px -2px rgba(28, 22, 14, 0.10);
+  --shadow-md: 0 8px 16px -4px rgba(28, 22, 14, 0.12);
+  --shadow-lg: 0 14px 28px -6px rgba(28, 22, 14, 0.15);
+  --shadow-xl: 0 22px 40px -8px rgba(28, 22, 14, 0.18);
+  --shadow-2xl: 0 32px 56px -12px rgba(28, 22, 14, 0.22);
 
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
   --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
@@ -152,67 +154,68 @@
 }
 
 .dark {
-  --button-outline: rgba(245, 245, 241, 0.12);
-  --badge-outline: rgba(245, 245, 241, 0.08);
+  --button-outline: rgba(240, 232, 216, 0.12);
+  --badge-outline: rgba(240, 232, 216, 0.08);
 
   --opaque-button-border-intensity: 10;
 
-  --elevate-1: rgba(245, 245, 241, 0.05);
-  --elevate-2: rgba(245, 245, 241, 0.1);
+  --elevate-1: rgba(240, 232, 216, 0.05);
+  --elevate-2: rgba(240, 232, 216, 0.1);
 
-  --background: 220 12% 8%;
-  --foreground: 60 9% 96%;
-  --border: 60 9% 90%;
+  /* Midnight ink paper */
+  --background: 22 16% 9%;
+  --foreground: 42 32% 95%;
+  --border: 40 20% 78%;
 
-  --card: 220 12% 11%;
-  --card-foreground: 60 9% 96%;
-  --card-border: 60 9% 82%;
+  --card: 22 16% 12%;
+  --card-foreground: 42 32% 95%;
+  --card-border: 38 22% 55%;
 
-  --sidebar: 220 12% 8%;
-  --sidebar-foreground: 60 9% 96%;
-  --sidebar-border: 60 9% 82%;
-  --sidebar-primary: 14 100% 60%;
-  --sidebar-primary-foreground: 220 9% 10%;
-  --sidebar-accent: 220 12% 16%;
-  --sidebar-accent-foreground: 60 9% 96%;
-  --sidebar-ring: 14 100% 60%;
+  --sidebar: 22 16% 9%;
+  --sidebar-foreground: 42 32% 95%;
+  --sidebar-border: 38 22% 55%;
+  --sidebar-primary: 40 72% 55%;
+  --sidebar-primary-foreground: 20 16% 10%;
+  --sidebar-accent: 22 16% 18%;
+  --sidebar-accent-foreground: 42 32% 95%;
+  --sidebar-ring: 40 72% 55%;
 
-  --popover: 220 12% 11%;
-  --popover-foreground: 60 9% 96%;
-  --popover-border: 60 9% 82%;
+  --popover: 22 16% 12%;
+  --popover-foreground: 42 32% 95%;
+  --popover-border: 38 22% 55%;
 
-  --primary: 14 100% 60%;
-  --primary-foreground: 220 9% 10%;
+  --primary: 40 72% 55%;
+  --primary-foreground: 20 16% 10%;
 
-  --secondary: 154 35% 55%;
-  --secondary-foreground: 220 9% 10%;
+  --secondary: 30 22% 30%;
+  --secondary-foreground: 42 32% 95%;
 
-  --muted: 220 10% 18%;
-  --muted-foreground: 60 6% 70%;
+  --muted: 22 12% 18%;
+  --muted-foreground: 40 12% 68%;
 
-  --accent: 43 100% 63%;
-  --accent-foreground: 220 9% 10%;
+  --accent: 32 30% 24%;
+  --accent-foreground: 42 32% 95%;
 
-  --destructive: 0 62.8% 40%;
-  --destructive-foreground: 60 9% 96%;
+  --destructive: 4 55% 46%;
+  --destructive-foreground: 42 32% 95%;
 
-  --input: 60 9% 82%;
-  --ring: 14 100% 60%;
+  --input: 38 22% 55%;
+  --ring: 40 72% 55%;
 
-  --chart-1: 14 100% 60%;
-  --chart-2: 154 35% 55%;
-  --chart-3: 43 100% 63%;
-  --chart-4: 60 9% 96%;
-  --chart-5: 60 6% 55%;
+  --chart-1: 40 72% 55%;
+  --chart-2: 30 22% 30%;
+  --chart-3: 32 30% 24%;
+  --chart-4: 42 32% 95%;
+  --chart-5: 40 12% 55%;
 
-  --shadow-2xs: 2px 2px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-xs: 3px 3px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-sm: 4px 4px 0px 0px rgba(0, 0, 0, 1);
-  --shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-md: 6px 6px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-lg: 8px 8px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-xl: 10px 10px 0px 0px rgba(0, 0, 0, 1);
-  --shadow-2xl: 14px 14px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-2xs: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 6px -1px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 16px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 14px 28px -6px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 22px 40px -8px rgba(0, 0, 0, 0.55);
+  --shadow-2xl: 0 32px 56px -12px rgba(0, 0, 0, 0.6);
 }
 
 @layer base {
@@ -239,21 +242,27 @@
     pointer-events: none;
   }
 
-  /* "Order ticket" strip — the site's signature motif. A row of mono
-     numerals (time / servings / difficulty) styled like a printed kitchen
-     chit, used on recipe cards and the recipe detail hero. */
-  .ticket-strip {
-    @apply font-mono text-xs font-semibold uppercase tracking-wider;
-    background-image: repeating-linear-gradient(
+  /* Gold-line divider — the site's signature editorial motif. A slim
+     gold hairline rule (fading at both ends, like a rule in a bound
+     cookbook) sitting above a row of fine, uppercase, letter-spaced
+     text — used on recipe cards and the recipe detail hero in place of
+     the old dashed "order ticket" strip. */
+  .gold-divider {
+    @apply relative text-xs font-medium uppercase tracking-wider;
+  }
+  .gold-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
       to right,
-      hsl(var(--foreground)) 0,
-      hsl(var(--foreground)) 6px,
-      transparent 6px,
-      transparent 12px
+      transparent,
+      hsl(var(--primary) / 0.75) 12%,
+      hsl(var(--primary) / 0.75) 88%,
+      transparent
     );
-    background-position: top;
-    background-size: 12px 2px;
-    background-repeat: repeat-x;
   }
 }
-
