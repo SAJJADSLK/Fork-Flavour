@@ -26,8 +26,8 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           </div>
         </div>
 
-        {/* Order-ticket strip: mono numerals, dashed rule, like a chit off the kitchen rail */}
-        <div className="ticket-strip flex items-center justify-between px-4 py-2 pt-3 text-muted-foreground">
+        {/* Gold-line divider: slim fading gold hairline above fine uppercase meta text */}
+        <div className="gold-divider flex items-center justify-between px-4 py-2 pt-3 text-muted-foreground">
           <div className="flex items-center gap-3">
             {recipe.totalMinutes != null && (
               <span className="flex items-center gap-1" title="Total time">
