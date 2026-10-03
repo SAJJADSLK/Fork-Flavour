@@ -1,44 +1,38 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, UtensilsCrossed } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [location] = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const home = location === "/";
+  const clear = home && !scrolled;
+
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 40);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+
+  const link = (href: string, label: string) => (
+    <Link href={href} className={`text-[11px] uppercase tracking-[0.28em] transition-opacity hover:opacity-60 ${location === href ? "underline underline-offset-8 decoration-primary" : ""}`}>
+      {label}
+    </Link>
+  );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80" data-testid="link-home-logo">
-          <div className="bg-primary text-primary-foreground p-1.5 rounded-sm border-2 border-foreground">
-            <UtensilsCrossed className="w-5 h-5" />
-          </div>
-          <span className="font-serif font-extrabold text-xl tracking-tight">Fork & Flavor</span>
+    <header
+      className={`sticky top-0 z-50 h-20 w-full transition-colors duration-500 ${home ? "-mb-20" : ""} ${
+        clear ? "bg-transparent text-white" : "bg-background/90 text-foreground backdrop-blur border-b border-border"
+      }`}
+    >
+      <div className="container mx-auto h-full px-6 grid grid-cols-3 items-center">
+        <nav className="flex items-center gap-6">{link("/recipes", "Recipes")}</nav>
+        <Link href="/" className="justify-self-center font-serif text-2xl md:text-3xl tracking-[0.04em]" data-testid="link-home-logo">
+          Fork <span className="italic text-primary">&</span> Flavor
         </Link>
-        
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wide">
-          <Link 
-            href="/recipes" 
-            className={`transition-colors hover:text-primary ${location === "/recipes" ? "text-primary" : "text-muted-foreground"}`}
-          >
-            Recipes
-          </Link>
-          <Link 
-            href="/about" 
-            className={`transition-colors hover:text-primary ${location === "/about" ? "text-primary" : "text-muted-foreground"}`}
-          >
-            Philosophy
-          </Link>
-        </nav>
-
-        <div className="flex items-center gap-4">
-          <Link href="/recipes" className="hidden md:flex">
-            <Button variant="ghost" size="icon" className="rounded-sm" aria-label="Search recipes">
-              <Search className="w-5 h-5" />
-            </Button>
-          </Link>
-        </div>
+        <nav className="flex items-center gap-6 justify-self-end">{link("/about", "Maison")}</nav>
       </div>
     </header>
   );
 }
-
