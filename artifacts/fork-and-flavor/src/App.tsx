@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
+import { Analytics } from '@vercel/analytics/react';
 
 // Components
 import { Navbar } from '@/components/layout/Navbar';
@@ -54,6 +55,7 @@ function App() {
           </Layout>
         </WouterRouter>
         <Toaster />
+        <Analytics />
       </TooltipProvider>
     </QueryClientProvider>
   );
