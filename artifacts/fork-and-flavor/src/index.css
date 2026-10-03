@@ -269,5 +269,6 @@
 @layer utilities {
   .text-bronze { color: hsl(33 62% 30%); }
   .dark .text-bronze { color: hsl(var(--primary)); }
-  .eyebrow { @apply text-[11px] font-medium uppercase tracking-[0.28em] text-bronze; }
+  .eyebrow { @apply text-[11px] font-medium uppercase tracking-[0.28em]; color: hsl(33 62% 30%); }
+  .dark .eyebrow { color: hsl(var(--primary)); }
 }
