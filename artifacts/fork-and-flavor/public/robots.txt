@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chef-analyzer--lelamsajjad.replit.app/sitemap.xml
+Sitemap: https://www.forkflavour.com/sitemap.xml
