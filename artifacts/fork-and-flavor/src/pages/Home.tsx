@@ -3,144 +3,127 @@ import { RecipeCard, RecipeCardSkeleton } from "@/components/RecipeCard";
 import { NaturalLanguageSearch } from "@/components/NaturalLanguageSearch";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
+import { motion, MotionConfig } from "framer-motion";
+import type { ReactNode } from "react";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
+const Reveal = ({ children }: { children: ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-60px" }}
+    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+  >
+    {children}
+  </motion.div>
+);
+
+const Heading = ({ eyebrow, title, href, cta }: { eyebrow: string; title: string; href: string; cta: string }) => (
+  <div className="mb-14 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p className="eyebrow mb-3">{eyebrow}</p>
+      <h2 className="font-serif text-4xl md:text-5xl">{title}</h2>
+    </div>
+    <Link href={href} className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-bronze hover:opacity-60 transition-opacity">
+      {cta} <ArrowRight className="h-3.5 w-3.5" />
+    </Link>
+  </div>
+);
+
 export default function Home() {
-  const { data: popularRecipes, isLoading: isLoadingPopular } = useListPopularRecipes({ limit: 4 });
-  const { data: recentRecipes, isLoading: isLoadingRecent } = useListRecentRecipes({ limit: 4 });
-  const { data: categories, isLoading: isLoadingCategories } = useListCategories();
+  const { data: popular, isLoading: lp } = useListPopularRecipes({ limit: 4 });
+  const { data: recent, isLoading: lr } = useListRecentRecipes({ limit: 4 });
+  const { data: categories } = useListCategories();
 
   useDocumentMeta({
-    title: "Fork & Flavor — Structured Recipes for Home Cooks",
-    description: "A structured recipe library for home cooks who cook. Clear timing, real ingredients, and substitutions that make sense — no life stories.",
+    title: "Fork & Flavor — Recipes, Precisely Written",
+    description: "A curated recipe library with clear timing, honest ingredients, and substitutions that make sense.",
     canonicalPath: "/",
   });
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-muted">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/assets/hero.jpg" 
-            alt="Professional kitchen counter" 
-            className="w-full h-full object-cover object-center opacity-80"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-background/10" />
-        </div>
-        
-        <div className="relative z-10 container mx-auto px-4 text-center mt-20">
-          <Badge className="mb-6 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 backdrop-blur-sm">The Intelligent Kitchen</Badge>
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-foreground">
-            Structured data.<br/>Not life stories.
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto font-sans">
-            A structured recipe library for home cooks who cook. Clear timing, real ingredients, and substitutions that make sense.
-          </p>
-          
-          <NaturalLanguageSearch />
-        </div>
-      </section>
+  const feature = popular?.[0];
 
-      {/* Categories Browser */}
-      <section className="py-16 bg-card border-b border-border">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="font-serif text-3xl font-bold">Categories</h2>
+  return (
+    <MotionConfig reducedMotion="user">
+      <div className="flex flex-col">
+        {/* Hero */}
+        <section className="relative flex h-screen min-h-[640px] items-center justify-center overflow-hidden bg-secondary text-white">
+          <img src="/assets/hero.jpg" alt="A chef's board with fresh herbs and tomatoes" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
+          <div className="relative z-10 container mx-auto px-6 text-center">
+            <p className="mb-6 text-[11px] uppercase tracking-[0.4em] text-primary">The Recipe Library</p>
+            <h1 className="mx-auto max-w-4xl font-serif text-6xl font-normal leading-[1.02] md:text-8xl">
+              Recipes, <span className="italic">precisely</span> written.
+            </h1>
+            <p className="mx-auto mt-8 max-w-xl text-lg font-light text-white/80">
+              Clear timing, honest ingredients, and substitutions that make sense.
+            </p>
+            <div className="mt-12"><NaturalLanguageSearch /></div>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {isLoadingCategories ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
-              ))
-            ) : (
-              categories?.map((category) => (
-                <Link key={category.name} href={`/recipes?category=${encodeURIComponent(category.name)}`}>
-                  <div className="group relative h-32 rounded-lg overflow-hidden cursor-pointer">
-                    <img 
-                      src={category.imageUrl} 
-                      alt={category.name} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-4 text-center">
-                      <span className="font-serif font-semibold text-lg">{category.name}</span>
-                      <span className="text-xs text-white/80 mt-1">{category.recipeCount} recipes</span>
+        </section>
+
+        {/* Categories */}
+        <section className="border-b border-border py-10">
+          <div className="container mx-auto flex flex-wrap justify-center gap-x-12 gap-y-4 px-6">
+            {categories?.map((c) => (
+              <Link key={c.name} href={`/recipes?category=${encodeURIComponent(c.name)}`} className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground transition-colors hover:text-bronze">
+                {c.name}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Featured */}
+        <section className="py-28">
+          <div className="container mx-auto px-6">
+            <Reveal><Heading eyebrow="Featured" title="From the collection" href="/recipes?sort=popular" cta="View all" /></Reveal>
+            {feature && (
+              <Reveal>
+                <Link href={`/recipe/${feature.slug}`} className="group mb-20 grid items-center gap-10 md:grid-cols-[1.3fr_1fr] md:gap-20">
+                  <div className="aspect-[5/4] overflow-hidden bg-muted">
+                    <img src={feature.imageUrl} alt={feature.title} className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                  </div>
+                  <div>
+                    <p className="eyebrow mb-4">{feature.category}</p>
+                    <h3 className="font-serif text-4xl leading-tight md:text-6xl">{feature.title}</h3>
+                    <div className="gold-divider mt-8 max-w-xs pt-4 text-muted-foreground tracking-[0.2em]">
+                      {feature.totalMinutes != null ? `${feature.totalMinutes} min` : "Read the recipe"}
                     </div>
                   </div>
                 </Link>
-              ))
+              </Reveal>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Recipes */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <h2 className="font-serif text-3xl font-bold mb-2">Editor's Picks</h2>
-              <p className="text-muted-foreground">Recipes tested in our own kitchen, start to finish.</p>
+            <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+              {lp ? Array.from({ length: 3 }).map((_, i) => <RecipeCardSkeleton key={i} />) : popular?.slice(1, 4).map((r) => <Reveal key={r.id}><RecipeCard recipe={r} /></Reveal>)}
             </div>
-            <Link href="/recipes?sort=popular" className="inline-flex items-center gap-2 text-primary font-medium hover:underline underline-offset-4">
-              View all picks <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {isLoadingPopular ? (
-              Array.from({ length: 4 }).map((_, i) => <RecipeCardSkeleton key={i} />)
-            ) : (
-              popularRecipes?.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
-              ))
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Philosophy Banner */}
-      <section className="py-20 bg-primary/5 border-y border-primary/10">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <h2 className="font-serif text-3xl font-bold mb-6">Our Philosophy</h2>
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-            We believe a recipe is a piece of software for your kitchen. It should be tested, documented, and structured. When you're standing in your kitchen at 11pm on a Tuesday, you need instructions, not inspiration.
-          </p>
-          <Link href="/about" className="inline-flex items-center justify-center h-10 px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
-            Read the Manifesto
-          </Link>
-        </div>
-      </section>
-
-      {/* Recent Recipes */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <h2 className="font-serif text-3xl font-bold mb-2">Latest additions</h2>
-              <p className="text-muted-foreground">The newest recipes in the library.</p>
+        {/* Philosophy */}
+        <section className="bg-secondary py-32 text-secondary-foreground">
+          <Reveal>
+            <div className="container mx-auto max-w-3xl px-6 text-center">
+              <p className="mb-6 text-[11px] uppercase tracking-[0.4em] text-primary">The Maison</p>
+              <p className="font-serif text-3xl italic leading-snug md:text-5xl">
+                A good recipe is exact, calm, and easy to follow when your hands are full.
+              </p>
+              <Link href="/about" className="mt-12 inline-block border-b border-primary pb-1 text-[11px] uppercase tracking-[0.28em] transition-opacity hover:opacity-60">
+                Our philosophy
+              </Link>
             </div>
-            <Link href="/recipes?sort=recent" className="inline-flex items-center gap-2 text-primary font-medium hover:underline underline-offset-4">
-              View all new recipes <ArrowRight className="w-4 h-4" />
-            </Link>
+          </Reveal>
+        </section>
+
+        {/* Latest */}
+        <section className="py-28">
+          <div className="container mx-auto px-6">
+            <Reveal><Heading eyebrow="New" title="Latest additions" href="/recipes?sort=recent" cta="View all" /></Reveal>
+            <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
+              {lr ? Array.from({ length: 4 }).map((_, i) => <RecipeCardSkeleton key={i} />) : recent?.map((r) => <Reveal key={r.id}><RecipeCard recipe={r} /></Reveal>)}
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {isLoadingRecent ? (
-              Array.from({ length: 4 }).map((_, i) => <RecipeCardSkeleton key={i} />)
-            ) : (
-              recentRecipes?.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </MotionConfig>
   );
 }
-
-// Ensure Badge is imported in the file that needs it
-import { Badge } from "@/components/ui/badge";
