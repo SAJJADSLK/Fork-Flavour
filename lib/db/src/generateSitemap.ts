@@ -5,9 +5,7 @@ import { db, recipesTable } from "./index";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Set SITE_URL once the app has a real domain (e.g. after publishing) so the
-// sitemap advertises canonical, crawlable URLs instead of a placeholder.
-const SITE_URL = (process.env.SITE_URL ?? "https://fork-and-flavor.replit.app").replace(/\/$/, "");
+const SITE_URL = (process.env.SITE_URL ?? "https://www.forkflavour.com").replace(/\/$/, "");
 
 async function generateSitemap() {
   const rows = await db.query.recipesTable.findMany({
@@ -17,9 +15,10 @@ async function generateSitemap() {
   const staticUrls = [
     { path: "/", changefreq: "daily", priority: "1.0" },
     { path: "/recipes", changefreq: "daily", priority: "0.9" },
-    { path: "/about", changefreq: "monthly", priority: "0.3" },
-    { path: "/privacy", changefreq: "yearly", priority: "0.1" },
-    { path: "/terms", changefreq: "yearly", priority: "0.1" },
+    { path: "/about", changefreq: "monthly", priority: "0.5" },
+    { path: "/contact", changefreq: "monthly", priority: "0.5" },
+    { path: "/privacy", changefreq: "yearly", priority: "0.2" },
+    { path: "/terms", changefreq: "yearly", priority: "0.2" },
   ];
 
   const urlEntries = [

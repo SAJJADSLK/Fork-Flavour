@@ -26,7 +26,15 @@
       "destination": "/api"
     },
     {
-      "source": "/(.*)",
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/ads.txt",
+      "destination": "/ads.txt"
+    },
+    {
+      "source": "/((?!api/|robots\\.txt|ads\\.txt|sitemap\\.xml).*)",
       "destination": "/index.html"
     }
   ],

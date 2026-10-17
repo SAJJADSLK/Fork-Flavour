@@ -1,11 +1,16 @@
+import { useState, useEffect, useCallback } from "react";
 import { useRoute } from "wouter";
 import { useGetRecipe, useGetRelatedRecipes } from "@workspace/api-client-react";
 import { SubstitutionHelper } from "@/components/SubstitutionHelper";
 import { RecipeCard } from "@/components/RecipeCard";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Clock, Users, Flame, ChefHat, Star, ArrowLeft, Lightbulb, Archive, HelpCircle, CheckCircle2 } from "lucide-react";
+import { 
+  Clock, Users, Flame, ChefHat, Star, ArrowLeft, Lightbulb, 
+  Archive, HelpCircle, CheckCircle2, Printer, Play, Minus, Plus, Check, X, ChevronRight, ChevronLeft
+} from "lucide-react";
 import { Link } from "wouter";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { useJsonLd } from "@/hooks/useJsonLd";
@@ -131,6 +136,27 @@ export default function RecipeDetail() {
 
   const { data: recipe, isLoading, isError } = useGetRecipe(slug);
   const { data: relatedRecipes } = useGetRelatedRecipes(slug);
+
+  // ── Interactive State ───────────────────────────────────────────────────
+  const [servingsMultiplier, setServingsMultiplier] = useState<number>(1);
+  const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
+  const [cookMode, setCookMode] = useState(false);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  // Initialize servings multiplier once recipe loads
+  useEffect(() => {
+    if (recipe?.servings) {
+      setServingsMultiplier(1);
+    }
+  }, [recipe?.id]);
+
+  const toggleIngredient = (idx: number) => {
+    setCheckedIngredients((prev) => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   const metaDescription = recipe ? buildMetaDescription(recipe) : undefined;
 
@@ -338,6 +364,29 @@ export default function RecipeDetail() {
                 </div>
               )}
             </div>
+
+            {/* Quick Interactive Actions */}
+            <div className="flex items-center gap-3 sm:ml-auto">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => {
+                  setCurrentStepIndex(0);
+                  setCookMode(true);
+                }}
+                className="gap-2 font-medium bg-primary text-primary-foreground shadow-sm"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" /> Cook Mode
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrint}
+                className="gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <Printer className="w-3.5 h-3.5" /> Print
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -494,24 +543,77 @@ export default function RecipeDetail() {
 
             <SubstitutionHelper recipeSlug={recipe.slug} />
 
-            {/* Ingredients */}
+            {/* Ingredients with Scaler & Interactive Checklist */}
             <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-              <h2 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3">
-                <span className="bg-primary text-primary-foreground w-8 h-8 rounded flex items-center justify-center text-lg">1</span>
-                Ingredients
-              </h2>
-              <ul className="space-y-4">
-                {recipe.ingredients.map((ingredient, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-2 shrink-0" />
-                    <div>
-                      <span className="text-foreground font-medium">{ingredient.item}</span>
-                      {ingredient.note && (
-                        <span className="text-muted-foreground text-sm block mt-0.5">{ingredient.note}</span>
-                      )}
-                    </div>
-                  </li>
-                ))}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-serif text-2xl font-bold flex items-center gap-3">
+                  <span className="bg-primary text-primary-foreground w-8 h-8 rounded flex items-center justify-center text-lg">1</span>
+                  Ingredients
+                </h2>
+
+                {/* Servings multiplier */}
+                {recipe.servings && (
+                  <div className="flex items-center gap-2 bg-muted/60 px-2 py-1 rounded-md text-xs font-medium">
+                    <button
+                      type="button"
+                      onClick={() => setServingsMultiplier((prev) => Math.max(0.5, prev - 0.5))}
+                      className="p-1 hover:text-primary transition-colors disabled:opacity-30"
+                      disabled={servingsMultiplier <= 0.5}
+                      aria-label="Decrease servings"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </button>
+                    <span className="font-semibold text-foreground min-w-[3rem] text-center">
+                      {Math.round(recipe.servings * servingsMultiplier)} serv
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setServingsMultiplier((prev) => Math.min(4, prev + 0.5))}
+                      className="p-1 hover:text-primary transition-colors disabled:opacity-30"
+                      disabled={servingsMultiplier >= 4}
+                      aria-label="Increase servings"
+                    >
+                      <Plus className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-xs text-muted-foreground mb-4">
+                Tip: Click an ingredient to check it off as you prep.
+              </p>
+
+              <ul className="space-y-3">
+                {recipe.ingredients.map((ingredient, i) => {
+                  const isChecked = Boolean(checkedIngredients[i]);
+                  return (
+                    <li
+                      key={i}
+                      onClick={() => toggleIngredient(i)}
+                      className={`flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-colors select-none ${
+                        isChecked ? "bg-muted/40 text-muted-foreground line-through" : "hover:bg-muted/50 text-foreground"
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded border mt-0.5 shrink-0 flex items-center justify-center transition-colors ${
+                          isChecked
+                            ? "bg-primary border-primary text-primary-foreground"
+                            : "border-muted-foreground/40 hover:border-primary"
+                        }`}
+                      >
+                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                      <div className="text-sm">
+                        <span className={isChecked ? "line-through opacity-70" : "font-medium"}>
+                          {ingredient.item}
+                        </span>
+                        {ingredient.note && (
+                          <span className="text-xs text-muted-foreground block mt-0.5">{ingredient.note}</span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
@@ -552,6 +654,92 @@ export default function RecipeDetail() {
               {relatedRecipes.map(related => (
                 <RecipeCard key={related.id} recipe={related} />
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Fullscreen Cook Mode Modal ────────────────────────────────────── */}
+      {cookMode && (
+        <div className="fixed inset-0 z-50 bg-background/98 backdrop-blur flex flex-col animate-in fade-in duration-200">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-primary font-bold">Cook Mode</p>
+              <h2 className="font-serif text-lg font-bold line-clamp-1 text-foreground">{recipe.title}</h2>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCookMode(false)}
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-5 h-5" />
+              <span>Exit</span>
+            </Button>
+          </div>
+
+          {/* Step Body */}
+          <div className="flex-1 container mx-auto px-6 py-12 flex flex-col justify-center max-w-3xl">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-serif font-bold flex items-center justify-center text-lg shadow-sm">
+                  {currentStepIndex + 1}
+                </span>
+                <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Step {currentStepIndex + 1} of {recipe.instructions.length}
+                </span>
+              </div>
+
+              <p className="text-2xl md:text-4xl font-serif leading-relaxed text-foreground">
+                {recipe.instructions[currentStepIndex]?.text}
+              </p>
+
+              {recipe.instructions[currentStepIndex]?.timerMinutes && (
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-lg font-medium text-base">
+                  <Clock className="w-5 h-5" />
+                  Suggested time: {recipe.instructions[currentStepIndex].timerMinutes} minutes
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom Step Navigation Bar */}
+          <div className="border-t border-border p-6 bg-card">
+            <div className="container mx-auto max-w-3xl flex items-center justify-between gap-4">
+              <Button
+                variant="outline"
+                size="lg"
+                disabled={currentStepIndex === 0}
+                onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
+                className="gap-2"
+              >
+                <ChevronLeft className="w-5 h-5" /> Previous
+              </Button>
+
+              <div className="text-xs text-muted-foreground font-medium">
+                {currentStepIndex + 1} / {recipe.instructions.length}
+              </div>
+
+              {currentStepIndex < recipe.instructions.length - 1 ? (
+                <Button
+                  variant="default"
+                  size="lg"
+                  onClick={() => setCurrentStepIndex((prev) => Math.min(recipe.instructions.length - 1, prev + 1))}
+                  className="gap-2 bg-primary text-primary-foreground"
+                >
+                  Next Step <ChevronRight className="w-5 h-5" />
+                </Button>
+              ) : (
+                <Button
+                  variant="default"
+                  size="lg"
+                  onClick={() => setCookMode(false)}
+                  className="gap-2 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CheckCircle2 className="w-5 h-5" /> Finish Cooking
+                </Button>
+              )}
             </div>
           </div>
         </div>

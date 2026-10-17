@@ -78,8 +78,11 @@ export default function Privacy() {
 
         <h2 className="font-serif text-2xl font-bold text-foreground pt-4">Contact</h2>
         <p>
-          Questions about this policy can be directed through the contact
-          information listed on our About page.
+          Questions about this privacy policy, data practices, or advertising may be sent directly to our team via our{" "}
+          <a href="/contact" className="underline text-primary hover:opacity-80">
+            Contact Us Page
+          </a>{" "}
+          or by emailing <a href="mailto:contact@forkflavour.com" className="underline text-primary">contact@forkflavour.com</a>.
         </p>
       </div>
     </div>

@@ -8,9 +8,10 @@ export function Footer() {
         <p className="mx-auto mt-5 max-w-md text-sm font-light leading-relaxed opacity-70">
           Recipes, precisely written. Clear timing, honest ingredients, and substitutions that make sense.
         </p>
-        <nav className="mt-10 flex justify-center gap-8 text-[11px] uppercase tracking-[0.28em]">
+        <nav className="mt-10 flex flex-wrap justify-center gap-6 md:gap-8 text-[11px] uppercase tracking-[0.28em]">
           <Link href="/recipes" className="hover:text-primary transition-colors">Recipes</Link>
           <Link href="/about" className="hover:text-primary transition-colors">Maison</Link>
+          <Link href="/contact" className="hover:text-primary transition-colors">Contact</Link>
           <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
           <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>
         </nav>

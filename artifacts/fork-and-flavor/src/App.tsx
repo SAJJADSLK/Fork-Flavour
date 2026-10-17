@@ -13,6 +13,7 @@ import Home from '@/pages/Home';
 import Recipes from '@/pages/Recipes';
 import RecipeDetail from '@/pages/RecipeDetail';
 import About from '@/pages/About';
+import Contact from '@/pages/Contact';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/recipes" component={Recipes} />
       <Route path="/recipe/:slug" component={RecipeDetail} />
       <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route component={NotFound} />

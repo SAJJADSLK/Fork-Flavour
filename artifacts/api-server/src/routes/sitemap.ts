@@ -15,7 +15,7 @@ router.get("/sitemap.xml", async (_req, res) => {
     columns: { slug: true, createdAt: true },
   });
 
-  const pages = ["/", "/recipes", "/about", "/privacy", "/terms"];
+  const pages = ["/", "/recipes", "/about", "/contact", "/privacy", "/terms"];
   const urls = [
     ...pages.map((p) => `  <url><loc>${site}${p}</loc></url>`),
     ...rows.map(

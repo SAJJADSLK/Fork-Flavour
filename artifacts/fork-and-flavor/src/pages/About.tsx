@@ -53,8 +53,8 @@ export default function About() {
             <div className="flex gap-4">
               <CheckCircle2 className="w-6 h-6 text-primary shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-foreground text-xl mb-2 font-serif">Real recipes, never generated.</h3>
-                <p>Our founding recipes are tested in our own kitchen. We've also built a much larger library sourced from TheMealDB's public database, credited on every page it appears — never invented, never AI-written. We use AI only to help you search ("chicken thighs and 20 minutes") and suggest substitutions, never to write a recipe.</p>
+                <h3 className="font-semibold text-foreground text-xl mb-2 font-serif">Tested & curated culinary standards.</h3>
+                <p>Our founding recipes are tested and developed in our kitchen with precise timing, temperature guidelines, and clear measurements. We carefully curate and edit our culinary collection to eliminate ambiguity, verify cooking ratios, and ensure every recipe is foolproof for home cooks.</p>
               </div>
             </div>
 
@@ -62,7 +62,7 @@ export default function About() {
               <CheckCircle2 className="w-6 h-6 text-primary shrink-0 mt-0.5" />
               <div>
                 <h3 className="font-semibold text-foreground text-xl mb-2 font-serif">Context-aware substitution.</h3>
-                <p>Missing an ingredient? Our AI sous-chef understands the context of the recipe and gives you a substitution that actually works for the dish you're making, not just a generic equivalent.</p>
+                <p>Missing an ingredient? Our smart sous-chef understands the context of the recipe and gives you a substitution that actually works for the dish you're making, not just a generic equivalent.</p>
               </div>
             </div>
             
@@ -75,13 +75,26 @@ export default function About() {
             </div>
           </div>
 
-          <p>
-            Welcome to a better way to cook. No noise, just flavor.
-          </p>
+          {/* Editorial & Contact Section */}
+          <div className="bg-muted/40 p-6 rounded-xl border border-border space-y-4 text-base">
+            <h3 className="font-serif text-2xl font-bold text-foreground">Editorial Transparency & Contact</h3>
+            <p className="text-sm leading-relaxed">
+              Fork & Flavor is an independent culinary publication. Our team curates, tests, and publishes structured recipes for home cooks worldwide. We are committed to culinary accuracy and reader satisfaction.
+            </p>
+            <div className="pt-2 text-sm">
+              <p>Have recipe feedback, corrections, or questions?</p>
+              <Link href="/contact" className="text-primary font-medium hover:underline inline-flex items-center gap-1 mt-1">
+                Reach out on our Contact Page <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
 
-          <div className="pt-8">
+          <div className="pt-8 flex flex-wrap gap-4 items-center">
             <Link href="/recipes" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors">
               Start Cooking <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 border border-border px-6 py-3 rounded-md font-medium hover:bg-muted transition-colors text-foreground">
+              Contact Team
             </Link>
           </div>
         </div>
